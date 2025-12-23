@@ -12,19 +12,19 @@ const router = createRouter({
       path: '/login',
       name: 'Login',
       component: () => import('../pages/LoginPage'),
-      meta: { requiresGuest: true },
+      meta: { requiresGuest: true, useLayout: false },
     },
     {
       path: '/movies',
       name: 'Movies',
       component: () => import('../pages/MoviesPage'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, useLayout: true, title: 'Películas' },
     },
     {
       path: '/movies/:id',
       name: 'MovieDetail',
       component: () => import('../pages/MovieDetailPage'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, useLayout: true },
     },
   ],
 })

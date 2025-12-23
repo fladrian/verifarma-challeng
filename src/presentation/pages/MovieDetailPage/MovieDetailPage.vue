@@ -1,32 +1,13 @@
 <template>
-  <div class="min-h-screen bg-background">
-    <header class="bg-background-secondary border-b border-gray-800 sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <button
-            @click="goBack"
-            class="flex items-center text-text-primary hover:text-accent transition-colors"
-          >
-            <Icon icon="mdi:arrow-left" class="w-5 h-5 mr-2" />
-            Volver
-          </button>
-          <div class="flex items-center space-x-4">
-            <span v-if="authStore.user" class="text-text-secondary">
-              {{ authStore.user.name }}
-            </span>
-            <button
-              @click="handleLogout"
-              class="px-4 py-2 text-sm font-medium text-text-primary bg-background-tertiary rounded-button hover:bg-gray-700 transition-colors flex items-center"
-            >
-              <Icon icon="mdi:logout" class="w-4 h-4 mr-2" />
-              Salir
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <button
+        @click="goBack"
+        class="flex items-center text-text-primary hover:text-accent transition-colors mb-6"
+      >
+        <Icon icon="mdi:arrow-left" class="w-5 h-5 mr-2" />
+        Volver
+      </button>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div v-if="isLoading">
         <MovieDetailSkeleton />
       </div>
@@ -144,21 +125,18 @@
           </div>
         </div>
       </div>
-    </main>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAuthStore } from '@application/stores'
 import { useMovie } from '@data/composables'
 import { Icon } from '@iconify/vue'
 import { MovieDetailSkeleton } from '@presentation/components'
 
 const route = useRoute()
 const router = useRouter()
-const authStore = useAuthStore()
 
 const movieId = computed(() => route.params.id as string)
 const movieQuery = useMovie(movieId)
@@ -175,11 +153,6 @@ const error = computed(() => {
 
 const goBack = () => {
   router.back()
-}
-
-const handleLogout = async () => {
-  await authStore.logout()
-  router.push('/login')
 }
 </script>
 

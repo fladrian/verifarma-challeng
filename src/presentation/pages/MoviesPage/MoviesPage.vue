@@ -1,31 +1,9 @@
 <template>
-  <div class="min-h-screen bg-background">
-    <header class="bg-background-secondary border-b border-gray-800 sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <h1 class="text-2xl font-bold text-text-primary">Películas</h1>
-          <div class="flex items-center space-x-4">
-            <span v-if="authStore.user" class="text-text-secondary">
-              {{ authStore.user.name }}
-            </span>
-            <Button
-              variant="tertiary"
-              icon="mdi:logout"
-              @click="handleLogout"
-            >
-              Salir
-            </Button>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <MovieFilters
         v-model:search-query="searchQuery"
         v-model:year-filter="yearFilter"
         v-model:type-filter="typeFilter"
-        @search="handleSearch"
         @filter-change="handleFilterChange"
       />
 
@@ -59,38 +37,52 @@
         :total-pages="totalPages"
         @change="changePage"
       />
-    </main>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '@application/stores'
 import { useMovies, useFilterMovies } from '@data/composables'
 import type { MovieSearchResult } from '@core/entities'
 import { MovieCardSkeleton, MovieCard, MovieFilters, Pagination } from '@presentation/components'
-import { Button } from '@presentation/shared/components'
 import { Icon } from '@iconify/vue'
 
 const router = useRouter()
-const authStore = useAuthStore()
 
 const currentPage = ref(1)
 const searchQuery = ref('')
 const yearFilter = ref('')
 const typeFilter = ref('')
 
-const moviesQuery = useMovies(currentPage, yearFilter, typeFilter)
-const filterQuery = useFilterMovies(searchQuery, currentPage, yearFilter, typeFilter)
+const {
+  data: moviesData,
+  isPending: moviesIsPending,
+  error: moviesError,
+} = useMovies(currentPage, yearFilter, typeFilter)
 
-const activeQuery = computed(() => searchQuery.value.trim().length > 0 ? filterQuery : moviesQuery)
+const {
+  data: filterData,
+  isPending: filterIsPending,
+  error: filterError,
+} = useFilterMovies(searchQuery, currentPage, yearFilter, typeFilter)
 
-const movies = computed<MovieSearchResult[]>(() => activeQuery.value.data?.value?.results || [])
-const totalPages = computed(() => activeQuery.value.data?.value?.totalPages || 0)
-const isLoading = computed(() => activeQuery.value.isLoading.value)
+const hasSearch = computed(() => searchQuery.value.trim().length > 0)
+
+const movies = computed<MovieSearchResult[]>(() => {
+  const data = hasSearch.value ? filterData.value : moviesData.value
+  return data?.results || []
+})
+
+const totalPages = computed(() => {
+  const data = hasSearch.value ? filterData.value : moviesData.value
+  return data?.totalPages ?? 0
+})
+
+const isLoading = computed(() => hasSearch.value ? filterIsPending.value : moviesIsPending.value)
+
 const error = computed(() => {
-  const err = activeQuery.value.error.value
+  const err = hasSearch.value ? filterError.value : moviesError.value
   if (err) {
     return err instanceof Error ? err.message : String(err)
   }
@@ -100,9 +92,6 @@ const error = computed(() => {
 watch([searchQuery, yearFilter, typeFilter], () => {
   currentPage.value = 1
 })
-
-const handleSearch = () => {
-}
 
 const handleFilterChange = () => {
   currentPage.value = 1
@@ -118,11 +107,6 @@ const goToMovieDetail = (imdbID: string) => {
   if (imdbID && imdbID !== 'undefined') {
     router.push(`/movies/${imdbID}`)
   }
-}
-
-const handleLogout = async () => {
-  await authStore.logout()
-  router.push('/login')
 }
 </script>
 

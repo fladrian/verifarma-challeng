@@ -54,7 +54,6 @@ const emit = defineEmits<{
   'update:searchQuery': [value: string]
   'update:yearFilter': [value: string]
   'update:typeFilter': [value: string]
-  search: []
   filterChange: []
 }>()
 
@@ -77,7 +76,6 @@ watch(() => props.typeFilter, (newVal) => {
 const handleSearchChange = (value: string) => {
   localSearchQuery.value = value
   emit('update:searchQuery', value)
-  emit('search')
 }
 
 const handleYearChange = (value: string) => {
