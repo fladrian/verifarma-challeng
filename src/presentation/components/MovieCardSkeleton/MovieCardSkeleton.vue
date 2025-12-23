@@ -11,6 +11,5 @@
 </template>
 
 <script setup lang="ts">
-// Skeleton component for movie cards
 </script>
 

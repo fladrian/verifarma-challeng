@@ -11,19 +11,19 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      component: () => import('../pages/LoginPage.vue'),
+      component: () => import('../pages/LoginPage'),
       meta: { requiresGuest: true },
     },
     {
       path: '/movies',
       name: 'Movies',
-      component: () => import('../pages/MoviesPage.vue'),
+      component: () => import('../pages/MoviesPage'),
       meta: { requiresAuth: true },
     },
     {
       path: '/movies/:id',
       name: 'MovieDetail',
-      component: () => import('../pages/MovieDetailPage.vue'),
+      component: () => import('../pages/MovieDetailPage'),
       meta: { requiresAuth: true },
     },
   ],

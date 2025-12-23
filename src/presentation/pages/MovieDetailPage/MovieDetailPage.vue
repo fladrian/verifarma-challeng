@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen bg-background">
-    <!-- Header -->
     <header class="bg-background-secondary border-b border-gray-800 sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
@@ -27,23 +26,17 @@
       </div>
     </header>
 
-    <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Loading -->
       <div v-if="isLoading">
         <MovieDetailSkeleton />
       </div>
 
-      <!-- Error -->
       <div v-else-if="error" class="bg-red-900/30 border border-red-700 text-red-300 px-4 py-3 rounded-button">
         {{ error }}
       </div>
 
-      <!-- Movie Details -->
       <div v-else-if="movie" class="space-y-8">
-        <!-- Poster and Basic Info -->
         <div class="flex flex-col md:flex-row gap-8">
-          <!-- Poster -->
           <div class="w-full md:w-80 flex-shrink-0">
             <div class="aspect-[2/3] bg-background-secondary rounded-card overflow-hidden shadow-card">
               <img
@@ -58,7 +51,6 @@
             </div>
           </div>
 
-          <!-- Info -->
           <div class="flex-1 space-y-4">
             <div>
               <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-2">
@@ -74,7 +66,6 @@
               </div>
             </div>
 
-            <!-- Ratings -->
             <div v-if="movie.Ratings && movie.Ratings.length > 0" class="flex flex-wrap gap-4">
               <div
                 v-for="rating in movie.Ratings"
@@ -94,7 +85,6 @@
               </div>
             </div>
 
-            <!-- Plot -->
             <div v-if="movie.Plot && movie.Plot !== 'N/A'">
               <h2 class="text-xl font-semibold text-text-primary mb-2">Sinopsis</h2>
               <p class="text-text-secondary leading-relaxed">{{ movie.Plot }}</p>
@@ -102,63 +92,52 @@
           </div>
         </div>
 
-        <!-- Details Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Director -->
           <div v-if="movie.Director && movie.Director !== 'N/A'">
             <h3 class="text-lg font-semibold text-text-primary mb-2">Director</h3>
             <p class="text-text-secondary">{{ movie.Director }}</p>
           </div>
 
-          <!-- Writers -->
           <div v-if="movie.Writer && movie.Writer !== 'N/A'">
             <h3 class="text-lg font-semibold text-text-primary mb-2">Escritores</h3>
             <p class="text-text-secondary">{{ movie.Writer }}</p>
           </div>
 
-          <!-- Actors -->
           <div v-if="movie.Actors && movie.Actors !== 'N/A'">
             <h3 class="text-lg font-semibold text-text-primary mb-2">Actores</h3>
             <p class="text-text-secondary">{{ movie.Actors }}</p>
           </div>
 
-          <!-- Language -->
           <div v-if="movie.Language && movie.Language !== 'N/A'">
             <h3 class="text-lg font-semibold text-text-primary mb-2">Idioma</h3>
             <p class="text-text-secondary">{{ movie.Language }}</p>
           </div>
 
-          <!-- Country -->
           <div v-if="movie.Country && movie.Country !== 'N/A'">
             <h3 class="text-lg font-semibold text-text-primary mb-2">País</h3>
             <p class="text-text-secondary">{{ movie.Country }}</p>
           </div>
 
-          <!-- Released -->
           <div v-if="movie.Released && movie.Released !== 'N/A'">
             <h3 class="text-lg font-semibold text-text-primary mb-2">Fecha de Estreno</h3>
             <p class="text-text-secondary">{{ movie.Released }}</p>
           </div>
 
-          <!-- Awards -->
           <div v-if="movie.Awards && movie.Awards !== 'N/A'">
             <h3 class="text-lg font-semibold text-text-primary mb-2">Premios</h3>
             <p class="text-text-secondary">{{ movie.Awards }}</p>
           </div>
 
-          <!-- Box Office -->
           <div v-if="movie.BoxOffice && movie.BoxOffice !== 'N/A'">
             <h3 class="text-lg font-semibold text-text-primary mb-2">Taquilla</h3>
             <p class="text-text-secondary">{{ movie.BoxOffice }}</p>
           </div>
 
-          <!-- Production -->
           <div v-if="movie.Production && movie.Production !== 'N/A'">
             <h3 class="text-lg font-semibold text-text-primary mb-2">Producción</h3>
             <p class="text-text-secondary">{{ movie.Production }}</p>
           </div>
 
-          <!-- IMDb Votes -->
           <div v-if="movie.imdbVotes && movie.imdbVotes !== 'N/A'">
             <h3 class="text-lg font-semibold text-text-primary mb-2">Votos IMDb</h3>
             <p class="text-text-secondary">{{ movie.imdbVotes }}</p>
@@ -175,7 +154,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@application/stores'
 import { useMovie } from '@data/composables'
 import { Icon } from '@iconify/vue'
-import { MovieDetailSkeleton } from '../components'
+import { MovieDetailSkeleton } from '@presentation/components'
 
 const route = useRoute()
 const router = useRouter()

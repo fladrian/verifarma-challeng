@@ -1,6 +1,5 @@
 <template>
   <div class="animate-pulse">
-    <!-- Poster and basic info skeleton -->
     <div class="flex flex-col md:flex-row gap-8 mb-8">
       <div class="w-full md:w-80 flex-shrink-0">
         <div class="aspect-[2/3] bg-gray-700 rounded-card"></div>
@@ -20,7 +19,6 @@
       </div>
     </div>
 
-    <!-- Details skeleton -->
     <div class="space-y-6">
       <div class="space-y-3">
         <div class="h-6 bg-gray-700 rounded w-32"></div>
@@ -42,6 +40,5 @@
 </template>
 
 <script setup lang="ts">
-// Skeleton component for movie detail page
 </script>
 

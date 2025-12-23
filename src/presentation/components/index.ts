@@ -1,7 +1,5 @@
-export { default as MovieCardSkeleton } from './MovieCardSkeleton.vue'
-export { default as MovieDetailSkeleton } from './MovieDetailSkeleton.vue'
-export { default as Button } from './Button.vue'
-export { default as Input } from './Input.vue'
-export { default as Select } from './Select.vue'
-export { default as MovieCard } from './MovieCard.vue'
-
+export { default as MovieCard } from './MovieCard'
+export { default as MovieFilters } from './MovieFilters'
+export { default as MovieCardSkeleton } from './MovieCardSkeleton'
+export { default as MovieDetailSkeleton } from './MovieDetailSkeleton'
+export { default as Pagination } from './Pagination'
