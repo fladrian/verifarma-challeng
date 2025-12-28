@@ -15,33 +15,49 @@
         <p class="text-text-secondary">Inicia sesión para continuar</p>
       </div>
 
-      <form @submit.prevent="handleLogin" class="space-y-6 bg-background-secondary p-8 rounded-lg shadow-card">
+      <form @submit="onSubmit" class="space-y-6 bg-background-secondary p-8 rounded-lg shadow-card">
         <div>
           <label for="email" class="block text-sm font-medium text-text-secondary mb-2">
             Email
           </label>
-          <input
+          <Field
             id="email"
-            v-model="form.email"
+            name="email"
             type="email"
-            required
-            class="w-full px-4 py-3 bg-background-tertiary border border-gray-700 rounded-button text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
-            placeholder="tu@email.com"
-          />
+            v-slot="{ field, meta }"
+          >
+            <input
+              v-bind="field"
+              :class="[
+                'w-full px-4 py-3 bg-background-tertiary border rounded-button text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition',
+                meta.touched && !meta.valid ? 'border-red-600' : 'border-gray-700'
+              ]"
+              placeholder="tu@email.com"
+            />
+          </Field>
+          <ErrorMessage name="email" class="mt-1 text-sm text-red-400" />
         </div>
 
         <div>
           <label for="password" class="block text-sm font-medium text-text-secondary mb-2">
             Contraseña
           </label>
-          <input
+          <Field
             id="password"
-            v-model="form.password"
+            name="password"
             type="password"
-            required
-            class="w-full px-4 py-3 bg-background-tertiary border border-gray-700 rounded-button text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
-            placeholder="••••••••"
-          />
+            v-slot="{ field, meta }"
+          >
+            <input
+              v-bind="field"
+              :class="[
+                'w-full px-4 py-3 bg-background-tertiary border rounded-button text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition',
+                meta.touched && !meta.valid ? 'border-red-600' : 'border-gray-700'
+              ]"
+              placeholder="••••••••"
+            />
+          </Field>
+          <ErrorMessage name="password" class="mt-1 text-sm text-red-400" />
         </div>
 
         <div v-if="authStore.error" class="bg-red-900/30 border border-red-700 text-red-300 px-4 py-3 rounded-button text-sm">
@@ -50,16 +66,16 @@
 
         <button
           type="submit"
-          :disabled="authStore.isLoading"
+          :disabled="authStore.isLoading || isSubmitting"
           class="w-full py-3 px-4 bg-primary text-white font-medium rounded-button hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
         >
           <Icon
-            v-if="authStore.isLoading"
+            v-if="authStore.isLoading || isSubmitting"
             icon="mdi:loading"
             class="animate-spin w-5 h-5 mr-2"
           />
           <Icon v-else icon="mdi:login" class="w-5 h-5 mr-2" />
-          {{ authStore.isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+          {{ authStore.isLoading || isSubmitting ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
         </button>
       </form>
     </div>
@@ -67,27 +83,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useForm, Field, ErrorMessage } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
 import { useAuthStore } from '@application/stores'
 import { Icon } from '@iconify/vue'
-import logoImage from '../../assets/verifarma-stream.png'
+import logoImage from '@presentation/assets/verifarma-stream.png'
+import { loginFormSchema } from '@data/schemas/loginSchema'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-const form = ref({
-  email: '',
-  password: '',
+const { handleSubmit, isSubmitting } = useForm({
+  validationSchema: toTypedSchema(loginFormSchema),
 })
 
-const handleLogin = async () => {
+const onSubmit = handleSubmit(async (values) => {
   try {
-    await authStore.login(form.value)
+    await authStore.login(values)
     router.push('/movies')
   } catch (error) {
     console.error('Error en login:', error)
   }
-}
+})
 </script>
 
